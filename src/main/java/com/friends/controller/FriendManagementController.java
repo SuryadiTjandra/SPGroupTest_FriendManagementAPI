@@ -51,12 +51,18 @@ public class FriendManagementController {
 	
 	@RequestMapping("/subscribe")
 	public Response subscribe(@RequestBody TargetRequest request){
-		return new Response(true);
+		return doWithException( () -> {
+			service.subscribe(request.getRequestor(), request.getTarget());
+			return new Response(true);
+		});
 	}
 	
 	@RequestMapping("/block")
 	public Response block(@RequestBody TargetRequest request){
-		return new ErrorResponse("999","this feature is not yet supported");
+		return doWithException( () -> {
+			service.block(request.getRequestor(), request.getTarget());
+			return new Response(true);
+		});
 	}
 	
 	@RequestMapping("/postUpdate")

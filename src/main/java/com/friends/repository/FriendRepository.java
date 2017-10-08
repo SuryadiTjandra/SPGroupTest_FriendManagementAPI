@@ -2,7 +2,6 @@ package com.friends.repository;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -42,17 +41,36 @@ public class FriendRepository {
 		);
 	}
 	
-	public List<String> findBlocked(String blocker){
+	public List<String> findSubscribers(String subscribee) {
 		return template.query(
-				"SELECT blockee FROM block WHERE blocker = ? ",
+				"SELECT subscriber FROM subscription WHERE subscribee = ? ",
 				ps -> {
-					ps.setString(1, blocker);
+					ps.setString(1, subscribee);
 				},
-				(rs, index) -> rs.getString("blockee")
+				(rs, index) -> rs.getString("subscriber")
+		);
+	}
+	
+	public List<String> findBlockers(String blockee){
+		return template.query(
+				"SELECT blocker FROM block WHERE blockee = ? ",
+				ps -> {
+					ps.setString(1, blockee);
+				},
+				(rs, index) -> rs.getString("blocker")
 		);
 	}
 	
 	public void makeFriends(String user1, String user2){
 		template.update("INSERT INTO friends(user1,user2) VALUES(?,?)", user1, user2);
 	}
+	
+	public void subscribe(String subscriber, String subscribee){
+		template.update("INSERT INTO subscription(subscriber,subscribee) VALUES(?,?)", subscriber, subscribee);
+	}
+
+	public void block(String blocker, String blockee){
+		template.update("INSERT INTO block(blocker,blockee) VALUES(?,?)", blocker, blockee);
+	}
+
 }

@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.friends.exceptions.AlreadyBlockedException;
 import com.friends.exceptions.AlreadyFriendsException;
+import com.friends.exceptions.AlreadySubscribedException;
 import com.friends.exceptions.InvalidEmailAddressException;
 import com.friends.exceptions.UserBlockedException;
 import com.friends.exceptions.UserNotFoundException;
@@ -23,8 +25,8 @@ public class FriendService {
 	}
 	
 	public List<String> findFriends(String email) {
-		if (email == null || email.trim().isEmpty())
-			throw new WrongRequestFormatException("Must have field 'email' which is not empty");
+		if (email == null)
+			throw new WrongRequestFormatException("Must have field 'email'");
 		checkEmail(email);
 		
 		return repo.findFriends(email);
@@ -64,17 +66,45 @@ public class FriendService {
 		if (email1Friends.contains(email2))
 			throw new AlreadyFriendsException(email1, email2);
 		
-		List<String> email1Blocked = repo.findBlocked(email1);
-		if (email1Blocked.contains(email2))
-			throw new UserBlockedException(email1, email2);
-		
-		List<String> email2Blocked = repo.findBlocked(email2);
-		if (email2Blocked.contains(email1))
+		List<String> email1Blockers = repo.findBlockers(email1);
+		if (email1Blockers.contains(email2))
 			throw new UserBlockedException(email2, email1);
+		
+		List<String> email2Blockers = repo.findBlockers(email2);
+		if (email2Blockers.contains(email1))
+			throw new UserBlockedException(email1, email2);
 		
 		repo.makeFriends(email1, email2);
 	}
 
+	public void subscribe(String requestor, String target){
+		if (requestor == null || target == null)
+			throw new WrongRequestFormatException("Must have fields 'requestor' and 'target'");
+		
+		checkEmail(requestor);
+		checkEmail(target);
+		
+		List<String> targetSubscribers = repo.findSubscribers(target);
+		if (targetSubscribers.contains(requestor))
+			throw new AlreadySubscribedException(requestor, target);
+		
+		repo.subscribe(requestor, target);
+	}
+	
+	public void block(String requestor, String target){
+		if (requestor == null || target == null)
+			throw new WrongRequestFormatException("Must have fields 'requestor' and 'target'");
+		
+		checkEmail(requestor);
+		checkEmail(target);
+		
+		List<String> targetBlockers = repo.findBlockers(target);
+		if (targetBlockers.contains(requestor))
+			throw new AlreadyBlockedException(requestor, target);
+		
+		repo.block(requestor, target);
+	}
+	
 	private void checkEmail(String email){
 		if (!email.contains("@") || email.contains(" "))
 			throw new InvalidEmailAddressException(email);
