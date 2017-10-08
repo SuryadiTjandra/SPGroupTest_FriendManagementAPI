@@ -10,6 +10,7 @@ import com.friends.exceptions.AlreadyBlockedException;
 import com.friends.exceptions.AlreadyFriendsException;
 import com.friends.exceptions.AlreadySubscribedException;
 import com.friends.exceptions.InvalidEmailAddressException;
+import com.friends.exceptions.SameUserException;
 import com.friends.exceptions.UserBlockedException;
 import com.friends.exceptions.UserNotFoundException;
 import com.friends.exceptions.WrongRequestFormatException;
@@ -40,8 +41,7 @@ public class FriendService {
  	}
 	
 	private List<String> findCommonFriends(String email1, String email2){
-		checkEmail(email1);
-		checkEmail(email2);
+		checkEmails(email1, email2);
 		
 		List<String> friendList1 = repo.findFriends(email1);
 		List<String> friendList2 = repo.findFriends(email2);
@@ -59,8 +59,7 @@ public class FriendService {
 	}
 	
 	private void makeFriends(String email1, String email2) {
-		checkEmail(email1);
-		checkEmail(email2);
+		checkEmails(email1, email2);
 		
 		List<String> email1Friends = repo.findFriends(email1);
 		if (email1Friends.contains(email2))
@@ -81,8 +80,7 @@ public class FriendService {
 		if (requestor == null || target == null)
 			throw new WrongRequestFormatException("Must have fields 'requestor' and 'target'");
 		
-		checkEmail(requestor);
-		checkEmail(target);
+		checkEmails(requestor, target);
 		
 		List<String> targetSubscribers = repo.findSubscribers(target);
 		if (targetSubscribers.contains(requestor))
@@ -95,14 +93,20 @@ public class FriendService {
 		if (requestor == null || target == null)
 			throw new WrongRequestFormatException("Must have fields 'requestor' and 'target'");
 		
-		checkEmail(requestor);
-		checkEmail(target);
+		checkEmails(requestor, target);
 		
 		List<String> targetBlockers = repo.findBlockers(target);
 		if (targetBlockers.contains(requestor))
 			throw new AlreadyBlockedException(requestor, target);
 		
 		repo.block(requestor, target);
+	}
+	
+	private void checkEmails(String email1, String email2){
+		checkEmail(email1);
+		checkEmail(email2);
+		if (email1.contentEquals(email2))
+			throw new SameUserException("The two users must not be the same.");
 	}
 	
 	private void checkEmail(String email){
