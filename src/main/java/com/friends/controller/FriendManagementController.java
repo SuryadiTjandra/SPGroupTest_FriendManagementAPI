@@ -16,16 +16,18 @@ import com.friends.responses.ErrorResponse;
 import com.friends.responses.FriendListResponse;
 import com.friends.responses.RecipientListResponse;
 import com.friends.responses.Response;
+import com.friends.service.FriendService;
 
 @RestController
 @RequestMapping("/friend/*")
 public class FriendManagementController {
 	
 	@Autowired
-	private FriendRepository repo;
+	private FriendService service;
+	
 	@RequestMapping("/users")
 	public Response getUsers(){
-		return new FriendListResponse(repo.findAllUsers());
+		return service.findAllUsers();
 	}
 	
 	@RequestMapping("/makeFriends")
@@ -35,12 +37,12 @@ public class FriendManagementController {
 	
 	@RequestMapping("/getFriends")
 	public Response getFriends(@RequestBody EmailRequest request){
-		return new FriendListResponse(Arrays.asList("aaa@a.com", "bbb@b.com"));
+		return service.findFriends(request.getEmail());
 	}
 	
 	@RequestMapping("/getCommonFriends")
 	public Response getCommonFriends(@RequestBody FriendsRequest request){
-		return new FriendListResponse(Arrays.asList("ccc@c.com"));
+		return service.findCommonFriends(request.getFriends());
 	}
 	
 	@RequestMapping("/subscribe")
