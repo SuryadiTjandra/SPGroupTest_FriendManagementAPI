@@ -49,7 +49,7 @@ public class FriendManagementAPI implements CommandLineRunner {
 		
 		List<Object[]> friends = Arrays.asList(
 				new String[]{"alice@a.com", "bob@b.com"},
-				new String[]{"bob@a.com", "carol@c.com"},
+				new String[]{"bob@b.com", "carol@c.com"},
 				new String[]{"dennis@d.com", "alice@a.com"},
 				new String[]{"dennis@d.com", "bob@b.com"},
 				new String[]{"dennis@d.com", "carol@c.com"},
