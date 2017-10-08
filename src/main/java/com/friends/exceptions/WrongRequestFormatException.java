@@ -7,4 +7,9 @@ public class WrongRequestFormatException extends ApplicationException{
 	public WrongRequestFormatException(String message){
 		super("Wrong request format : " + message);
 	}
+
+	@Override
+	public String getErrorCode() {
+		return "000";
+	}
 }

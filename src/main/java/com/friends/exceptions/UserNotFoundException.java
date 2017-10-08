@@ -10,4 +10,9 @@ public class UserNotFoundException extends ApplicationException{
 	public UserNotFoundException(String user){
 		super("User not found: User " + user + " does not exist");
 	}
+
+	@Override
+	public String getErrorCode() {
+		return "002";
+	}
 }

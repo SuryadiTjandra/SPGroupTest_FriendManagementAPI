@@ -7,5 +7,10 @@ public class UserBlockedException extends ApplicationException{
 	public UserBlockedException(String blocker, String blockee) {
 		super("Could not make a friend connection. " + blocker + " has blocked " + blockee);
 	}
+
+	@Override
+	public String getErrorCode() {
+		return "101";
+	}
 	
 }

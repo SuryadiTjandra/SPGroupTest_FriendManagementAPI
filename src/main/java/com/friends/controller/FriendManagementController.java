@@ -28,11 +28,7 @@ public class FriendManagementController {
 	
 	@RequestMapping("/users")
 	public Response getUsers(){
-		try{
-			return new FriendListResponse(service.findAllUsers());
-		}catch (Exception e){
-			return new ErrorResponse("Unknown error occured");
-		}
+		return doWithException( () -> new FriendListResponse(service.findAllUsers()));
 	}
 	
 	@RequestMapping("/makeFriends")
@@ -60,13 +56,13 @@ public class FriendManagementController {
 	
 	@RequestMapping("/block")
 	public Response block(@RequestBody TargetRequest request){
-		return new ErrorResponse("this feature is not yet supported");
+		return new ErrorResponse("999","this feature is not yet supported");
 	}
 	
 	@RequestMapping("/postUpdate")
 	public Response postUpdate(@RequestBody UpdateRequest request){
 		if (request.getText() == null || request.getText().isEmpty())
-			return new ErrorResponse("please enter your text");
+			return new ErrorResponse("999","please enter your text");
 		else
 			return new RecipientListResponse(Arrays.asList("aaa@a.com", "ddd@d.com"));
 	}
@@ -75,9 +71,9 @@ public class FriendManagementController {
 		try{
 			return service.get();
 		} catch (ApplicationException e){
-			return new ErrorResponse(e.getMessage());
+			return new ErrorResponse(e.getErrorCode(),e.getMessage());
 		} catch (Exception e){
-			return new ErrorResponse("Unknown error occured");
+			return new ErrorResponse("999","Unknown error occured");
 		}
 	}
 }

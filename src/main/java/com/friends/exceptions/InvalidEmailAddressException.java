@@ -10,4 +10,9 @@ public class InvalidEmailAddressException extends ApplicationException {
 	public InvalidEmailAddressException(String email){
 		super("Invalid email address: '" + email + "' is not a valid email address.");
 	}
+
+	@Override
+	public String getErrorCode() {
+		return "001";
+	}
 }
