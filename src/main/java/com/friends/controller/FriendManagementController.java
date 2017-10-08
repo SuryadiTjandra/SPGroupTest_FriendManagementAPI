@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.friends.repository.FriendRepository;
+import com.friends.exceptions.ApplicationException;
 import com.friends.requests.EmailRequest;
 import com.friends.requests.FriendsRequest;
 import com.friends.requests.TargetRequest;
@@ -27,7 +27,11 @@ public class FriendManagementController {
 	
 	@RequestMapping("/users")
 	public Response getUsers(){
-		return service.findAllUsers();
+		try{
+			return new FriendListResponse(service.findAllUsers());
+		}catch (Exception e){
+			return new ErrorResponse("Unknown error occured");
+		}
 	}
 	
 	@RequestMapping("/makeFriends")
@@ -37,12 +41,24 @@ public class FriendManagementController {
 	
 	@RequestMapping("/getFriends")
 	public Response getFriends(@RequestBody EmailRequest request){
-		return service.findFriends(request.getEmail());
+		try{
+			return new FriendListResponse(service.findFriends(request.getEmail()));
+		} catch (ApplicationException e){
+			return new ErrorResponse(e.getMessage());
+		} catch (Exception e){
+			return new ErrorResponse("Unknown error occured");
+		}
 	}
 	
 	@RequestMapping("/getCommonFriends")
 	public Response getCommonFriends(@RequestBody FriendsRequest request){
-		return service.findCommonFriends(request.getFriends());
+		try{
+			return new FriendListResponse(service.findCommonFriends(request.getFriends()));
+		} catch (ApplicationException e){
+			return new ErrorResponse(e.getMessage());
+		} catch (Exception e){
+			return new ErrorResponse("Unknown error occured");
+		}
 	}
 	
 	@RequestMapping("/subscribe")

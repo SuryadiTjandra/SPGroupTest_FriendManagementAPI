@@ -23,7 +23,7 @@ public class FriendManagementAPI implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		//initializing database
 		//create tables
-		template.execute("CREATE TABLE users( email VARCHAR(255))");
+		template.execute("CREATE TABLE users( email VARCHAR(255), PRIMARY KEY(email) )");
 		template.execute("CREATE TABLE friends("
 				+ "user1 VARCHAR(255), "
 				+ "user2 VARCHAR(255),"

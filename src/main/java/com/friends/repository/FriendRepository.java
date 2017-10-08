@@ -17,11 +17,17 @@ public class FriendRepository {
 		);
 	}
 	
+	public String findUser(String email){
+		return template.queryForObject(
+				"SELECT email FROM users WHERE email = ?", 
+				String.class, email);
+	}
+	
 	public List<String> findFriends(String email){
 		return template.query(
-				"SELECT user1 AS friend FROM friends WHERE user2 = ? "
+				"SELECT user2 AS friend FROM friends WHERE user1 = ? "
 				+ " UNION "
-				+ " SELECT user2 AS friend FROM friends WHERE user1 = ? ",
+				+ " SELECT user1 AS friend FROM friends WHERE user2 = ? ",
 				ps -> {
 					ps.setString(1, email);
 					ps.setString(2, email);	

@@ -6,37 +6,57 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.friends.exceptions.InvalidEmailAddressException;
+import com.friends.exceptions.UserNotFoundException;
+import com.friends.exceptions.WrongRequestFormatException;
 import com.friends.repository.FriendRepository;
-import com.friends.responses.ErrorResponse;
-import com.friends.responses.FriendListResponse;
-import com.friends.responses.Response;
 
 @Service
 public class FriendService {
 	@Autowired
 	private FriendRepository repo;
 	
-	public Response findAllUsers(){
-		return new FriendListResponse(repo.findAllUsers());
+	public List<String> findAllUsers(){
+		return repo.findAllUsers();
 	}
 	
-	public Response findFriends(String email){
-		return new FriendListResponse(repo.findFriends(email));
+	public List<String> findFriends(String email) {
+		if (email == null || email.trim().isEmpty())
+			throw new WrongRequestFormatException("Must have field 'email' which is not empty");
+		checkEmail(email);
+		
+		return repo.findFriends(email);
 	}
 	
-	public Response findCommonFriends(List<String> emailList){
+	public List<String> findCommonFriends(List<String> emailList){
 		if (emailList.size() != 2) 
-			return new ErrorResponse("Wrong request format. 'friends' must be 2 in length.");
+			throw new WrongRequestFormatException("Must have field 'friends' with length of exactly 2");
 		
 		return findCommonFriends(emailList.get(0), emailList.get(1));
  	}
 	
-	private Response findCommonFriends(String email1, String email2){
+	private List<String> findCommonFriends(String email1, String email2){
+		checkEmail(email1);
+		checkEmail(email2);
+		
 		List<String> friendList1 = repo.findFriends(email1);
 		List<String> friendList2 = repo.findFriends(email2);
 		List<String> commonFriends = friendList1.stream()
 										.filter(friend -> friendList2.contains(friend))
 										.collect(Collectors.toList());
-		return new FriendListResponse(commonFriends);
+		return commonFriends;
  	}
+	
+	private void checkEmail(String email){
+		if (!email.contains("@") || email.contains(" "))
+			throw new InvalidEmailAddressException(email);
+		
+		String[] splitEmail = email.split("@", 1);
+		if (splitEmail[0] == null || splitEmail[1] == null || splitEmail[0].isEmpty() || splitEmail[1].isEmpty()){
+			throw new InvalidEmailAddressException(email);
+		}
+		
+		if (repo.findUser(email) == null)
+			throw new UserNotFoundException(email);
+	}
 }
