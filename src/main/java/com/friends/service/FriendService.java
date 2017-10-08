@@ -1,6 +1,10 @@
 package com.friends.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +106,32 @@ public class FriendService {
 		repo.block(requestor, target);
 	}
 	
+	public List<String> findUpdateRecipients(String sender, String text) {
+		if (sender == null || text == null)
+			throw new WrongRequestFormatException("Must have fields 'sender' and 'text'");
+		checkEmail(sender);
+		
+		List<String> friends = repo.findFriends(sender);
+		List<String> subscribers = repo.findSubscribers(sender);
+		List<String> blockers = repo.findBlockers(sender);
+		List<String> mentioned = getEmailsFromText(text);
+		
+		Set<String> recipientSet = new HashSet<>();
+		recipientSet.addAll(friends);
+		recipientSet.addAll(subscribers);
+		recipientSet.addAll(mentioned);
+		recipientSet.removeAll(blockers);
+		recipientSet.remove(sender);
+		return new ArrayList<String>(recipientSet);
+	}
+
+	private List<String> getEmailsFromText(String text) {
+		return Arrays.stream(text.split(" |,"))
+					.filter(word -> word.contains("@"))
+					.filter(email -> repo.findUser(email) !=  null)
+					.collect(Collectors.toList());
+	}
+	
 	private void checkEmails(String email1, String email2){
 		checkEmail(email1);
 		checkEmail(email2);
@@ -121,4 +151,5 @@ public class FriendService {
 		if (repo.findUser(email) == null)
 			throw new UserNotFoundException(email);
 	}
+
 }

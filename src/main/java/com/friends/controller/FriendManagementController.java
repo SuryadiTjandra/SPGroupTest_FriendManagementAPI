@@ -67,10 +67,7 @@ public class FriendManagementController {
 	
 	@RequestMapping("/postUpdate")
 	public Response postUpdate(@RequestBody UpdateRequest request){
-		if (request.getText() == null || request.getText().isEmpty())
-			return new ErrorResponse("999","please enter your text");
-		else
-			return new RecipientListResponse(Arrays.asList("aaa@a.com", "ddd@d.com"));
+		return doWithException( () -> new RecipientListResponse(service.findUpdateRecipients(request.getSender(), request.getText())));
 	}
 	
 	private Response doWithException(Supplier<Response> service){
