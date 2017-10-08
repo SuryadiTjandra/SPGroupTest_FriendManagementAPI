@@ -158,8 +158,8 @@ then user would send a request to the URL `http://localhost:8080/friend/getFrien
 
 If any of the above operations fail, they will output an error response instead. The error response has the following format
 
-    ```
-    {
+	```
+	{
 		"success": false,
 		"errorCode": "000",
 		"message":"Sample error message"
