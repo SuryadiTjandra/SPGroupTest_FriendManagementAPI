@@ -1,6 +1,7 @@
 package com.friends.controller;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,29 +37,20 @@ public class FriendManagementController {
 	
 	@RequestMapping("/makeFriends")
 	public Response makeFriends(@RequestBody FriendsRequest request){
-		return new Response(true);
+		return doWithException( () -> {
+			service.makeFriends(request.getFriends());
+			return new Response(true);
+		});
 	}
 	
 	@RequestMapping("/getFriends")
 	public Response getFriends(@RequestBody EmailRequest request){
-		try{
-			return new FriendListResponse(service.findFriends(request.getEmail()));
-		} catch (ApplicationException e){
-			return new ErrorResponse(e.getMessage());
-		} catch (Exception e){
-			return new ErrorResponse("Unknown error occured");
-		}
+		return doWithException( () -> new FriendListResponse(service.findFriends(request.getEmail())));
 	}
 	
 	@RequestMapping("/getCommonFriends")
 	public Response getCommonFriends(@RequestBody FriendsRequest request){
-		try{
-			return new FriendListResponse(service.findCommonFriends(request.getFriends()));
-		} catch (ApplicationException e){
-			return new ErrorResponse(e.getMessage());
-		} catch (Exception e){
-			return new ErrorResponse("Unknown error occured");
-		}
+		return doWithException( () -> new FriendListResponse(service.findCommonFriends(request.getFriends())));
 	}
 	
 	@RequestMapping("/subscribe")
@@ -77,5 +69,15 @@ public class FriendManagementController {
 			return new ErrorResponse("please enter your text");
 		else
 			return new RecipientListResponse(Arrays.asList("aaa@a.com", "ddd@d.com"));
+	}
+	
+	private Response doWithException(Supplier<Response> service){
+		try{
+			return service.get();
+		} catch (ApplicationException e){
+			return new ErrorResponse(e.getMessage());
+		} catch (Exception e){
+			return new ErrorResponse("Unknown error occured");
+		}
 	}
 }

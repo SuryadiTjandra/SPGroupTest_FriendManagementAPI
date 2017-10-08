@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.friends.exceptions.InvalidEmailAddressException;
+import com.friends.exceptions.UserBlockedException;
 import com.friends.exceptions.UserNotFoundException;
 import com.friends.exceptions.WrongRequestFormatException;
 import com.friends.repository.FriendRepository;
@@ -28,11 +29,11 @@ public class FriendService {
 		return repo.findFriends(email);
 	}
 	
-	public List<String> findCommonFriends(List<String> emailList){
-		if (emailList.size() != 2) 
+	public List<String> findCommonFriends(List<String> friends){
+		if (friends == null || friends.size() != 2) 
 			throw new WrongRequestFormatException("Must have field 'friends' with length of exactly 2");
 		
-		return findCommonFriends(emailList.get(0), emailList.get(1));
+		return findCommonFriends(friends.get(0), friends.get(1));
  	}
 	
 	private List<String> findCommonFriends(String email1, String email2){
@@ -47,6 +48,27 @@ public class FriendService {
 		return commonFriends;
  	}
 	
+	public void makeFriends(List<String> friends){
+		if (friends == null || friends.size() != 2) 
+			throw new WrongRequestFormatException("Must have field 'friends' with length of exactly 2");
+		
+		makeFriends(friends.get(0), friends.get(1));
+	}
+	
+	private void makeFriends(String email1, String email2) {
+		checkEmail(email1);
+		checkEmail(email2);
+		
+		List<String> email1Blocked = repo.findBlocked(email1);
+		if (email1Blocked.contains(email2))
+			throw new UserBlockedException(email1, email2);
+		List<String> email2Blocked = repo.findBlocked(email2);
+		if (email2Blocked.contains(email1))
+			throw new UserBlockedException(email2, email1);
+		
+		repo.makeFriends(email1, email2);
+	}
+
 	private void checkEmail(String email){
 		if (!email.contains("@") || email.contains(" "))
 			throw new InvalidEmailAddressException(email);

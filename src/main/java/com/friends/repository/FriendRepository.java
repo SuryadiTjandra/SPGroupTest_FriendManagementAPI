@@ -41,4 +41,18 @@ public class FriendRepository {
 				(rs, index) -> rs.getString("friend")
 		);
 	}
+	
+	public List<String> findBlocked(String blocker){
+		return template.query(
+				"SELECT blockee FROM block WHERE blocker = ? ",
+				ps -> {
+					ps.setString(1, blocker);
+				},
+				(rs, index) -> rs.getString("blockee")
+		);
+	}
+	
+	public void makeFriends(String user1, String user2){
+		template.update("INSERT INTO friends(user1,user2) VALUES(?,?)", user1, user2);
+	}
 }
