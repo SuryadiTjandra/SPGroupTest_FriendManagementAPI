@@ -8,6 +8,6 @@ public class InvalidEmailAddressException extends ApplicationException {
 	 * @param email the email which is not valid
 	 */
 	public InvalidEmailAddressException(String email){
-		super("'" + email + "' is not a valid email address.");
+		super("Invalid email address: '" + email + "' is not a valid email address.");
 	}
 }

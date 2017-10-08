@@ -2,6 +2,8 @@ package com.friends.repository;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -18,9 +20,13 @@ public class FriendRepository {
 	}
 	
 	public String findUser(String email){
-		return template.queryForObject(
-				"SELECT email FROM users WHERE email = ?", 
-				String.class, email);
+		try{
+			return template.queryForObject(
+					"SELECT email FROM users WHERE email = ?", 
+					String.class, email);
+		}catch (EmptyResultDataAccessException e){
+			return null;
+		}
 	}
 	
 	public List<String> findFriends(String email){

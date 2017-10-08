@@ -51,7 +51,7 @@ public class FriendService {
 		if (!email.contains("@") || email.contains(" "))
 			throw new InvalidEmailAddressException(email);
 		
-		String[] splitEmail = email.split("@", 1);
+		String[] splitEmail = email.split("@", 2);
 		if (splitEmail[0] == null || splitEmail[1] == null || splitEmail[0].isEmpty() || splitEmail[1].isEmpty()){
 			throw new InvalidEmailAddressException(email);
 		}

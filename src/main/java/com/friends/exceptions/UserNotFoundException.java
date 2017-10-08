@@ -8,6 +8,6 @@ public class UserNotFoundException extends ApplicationException{
 	 * @param user the email address of the user which could not be found
 	 */
 	public UserNotFoundException(String user){
-		super("User " + user + " does not exist");
+		super("User not found: User " + user + " does not exist");
 	}
 }
