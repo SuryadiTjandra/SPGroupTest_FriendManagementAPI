@@ -27,24 +27,24 @@ then user would send a request to the URL `http://localhost:8080/friend/getFrien
 	}
 	```
 	* Possible errors : 
-	  ** 000 : The input does not follow the correct format
-	  ** 001 : The email address in the input is invalid
-	  ** 002 : The user specified by the email address does not exist
+	  * 000 : The input does not follow the correct format
+	  * 001 : The email address in the input is invalid
+	  * 002 : The user specified by the email address does not exist
 	  
 2.  Retrieve a list of common friends of two users
-   * Path : `/getCommonFriends`
-   * Sample Input :
-   ```
-   {
+    * Path : `/getCommonFriends`
+    * Sample Input :
+    ```
+    {
 		"friends":[
 			"example@example.com",
 			"example2@example.com"
 		]
-   }
-   ```
-   * Sample Output :
-   ```
-   {
+    }
+    ```
+    * Sample Output :
+    ```
+    {
 		"success": true,
 		"friends":[
 			"commonfriend1@example.com",
@@ -54,10 +54,10 @@ then user would send a request to the URL `http://localhost:8080/friend/getFrien
 	}
 	```
 	* Possible errors : 
-	  ** 000 : The input does not follow the correct format, and the 'friends' field length is not 2
-	  ** 001 : Any of the email addresses in the input are invalid
-	  ** 002 : The users specified by the email addresses do not exist
-	  ** 003 : The two email addresses in the input are the same
+	  * 000 : The input does not follow the correct format, and the 'friends' field length is not 2
+	  * 001 : Any of the email addresses in the input are invalid
+	  * 002 : The users specified by the email addresses do not exist
+	  * 003 : The two email addresses in the input are the same
 	  
 3.  Create a friend connection between two users
     * Path : `/makeFriends`
@@ -77,12 +77,12 @@ then user would send a request to the URL `http://localhost:8080/friend/getFrien
 	}
 	```
 	* Possible errors : 
-	  ** 000 : The input does not follow the correct format, and the 'friends' field length is not 2
-	  ** 001 : Any of the email addresses in the input are invalid
-	  ** 002 : The users specified by the email addresses do not exist
-	  ** 003 : The two email addresses in the input are the same
-	  ** 100 : The two users are already friends
-	  ** 101 : One of the users have blocked the others
+	  * 000 : The input does not follow the correct format, and the 'friends' field length is not 2
+	  * 001 : Any of the email addresses in the input are invalid
+	  * 002 : The users specified by the email addresses do not exist
+	  * 003 : The two email addresses in the input are the same
+	  * 100 : The two users are already friends
+	  * 101 : One of the users have blocked the others
 	  
 4.  Let a user subscribe to another user
     * Path : `/subscribe`
@@ -100,11 +100,11 @@ then user would send a request to the URL `http://localhost:8080/friend/getFrien
 	}
 	```
 	* Possible errors : 
-	  ** 000 : The input does not follow the correct format
-	  ** 001 : Any of the email addresses in the input are invalid
-	  ** 002 : The users specified by the email addresses do not exist
-	  ** 003 : The two email addresses in the input are the same
-	  ** 200 : The requestor already subscribed to the target
+	  * 000 : The input does not follow the correct format
+	  * 001 : Any of the email addresses in the input are invalid
+	  * 002 : The users specified by the email addresses do not exist
+	  * 003 : The two email addresses in the input are the same
+	  * 200 : The requestor already subscribed to the target
 
 5.  Let a user block updates from another user
     * Path : `/block`
@@ -122,11 +122,11 @@ then user would send a request to the URL `http://localhost:8080/friend/getFrien
 	}
 	```
 	* Possible errors : 
-	  ** 000 : The input does not follow the correct format
-	  ** 001 : Any of the email addresses in the input are invalid
-	  ** 002 : The users specified by the email addresses do not exist
-	  ** 003 : The two email addresses in the input are the same
-	  ** 300 : The requestor already blocked updates from the target
+	  * 000 : The input does not follow the correct format
+	  * 001 : Any of the email addresses in the input are invalid
+	  * 002 : The users specified by the email addresses do not exist
+	  * 003 : The two email addresses in the input are the same
+	  * 300 : The requestor already blocked updates from the target
 	  
 6.  Let a user post an update. This will return a list of email addresses that will receive the update.
     * Path : `/postUpdate`
@@ -150,9 +150,9 @@ then user would send a request to the URL `http://localhost:8080/friend/getFrien
 	}
 	```
 	* Possible errors : 
-	  ** 000 : The input does not follow the correct format
-	  ** 001 : The sender's email addresses in the input is invalid
-	  ** 002 : The user specified by the sender email address does not exist
+	  * 000 : The input does not follow the correct format
+	  * 001 : The sender's email addresses in the input is invalid
+	  * 002 : The user specified by the sender email address does not exist
 	  
 ### Errors
 
