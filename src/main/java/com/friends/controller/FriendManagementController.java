@@ -2,10 +2,12 @@ package com.friends.controller;
 
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.friends.repository.FriendRepository;
 import com.friends.requests.EmailRequest;
 import com.friends.requests.FriendsRequest;
 import com.friends.requests.TargetRequest;
@@ -18,6 +20,13 @@ import com.friends.responses.Response;
 @RestController
 @RequestMapping("/friend/*")
 public class FriendManagementController {
+	
+	@Autowired
+	private FriendRepository repo;
+	@RequestMapping("/users")
+	public Response getUsers(){
+		return new FriendListResponse(repo.findAllUsers());
+	}
 	
 	@RequestMapping("/makeFriends")
 	public Response makeFriends(@RequestBody FriendsRequest request){
