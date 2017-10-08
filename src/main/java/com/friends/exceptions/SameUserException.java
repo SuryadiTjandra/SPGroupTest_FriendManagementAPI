@@ -10,7 +10,7 @@ public class SameUserException extends ApplicationException {
 
 	@Override
 	public String getErrorCode() {
-		return "103";
+		return "003";
 	}
 
 }
